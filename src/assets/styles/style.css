@@ -2,10 +2,263 @@
 @import "./fonts.css";
 @import "./utils.css";
 
-.test {
-    color: yellow !important;
+body {
+    font-family: "Inter", sans-serif;
+    background-image: url('../img/bg.svg');
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+
 }
 
-.test {
-    color: red !important;
+header {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+    border-radius: 12px;
+    top: 20px;
+    width: 100%;
+    max-width: 1200px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    background-color: white;
+}
+
+.blue {
+    color: rgb(0, 113, 255);
+}
+
+h1 {
+    font-size: 20px;
+    margin: 0;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 25px;
+}
+
+nav ul li {
+    list-style: none;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+header address {
+    display: flex;
+    gap: 32px;
+}
+
+.address {
+    display: flex;
+    gap: 8px;
+}
+
+.address-telephones {
+    display: flex;
+    gap: 16px;
+}
+
+.address a {
+    text-decoration: none;
+    font-style: normal;
+    font-size: 16px;
+}
+
+.service-container {
+    position: relative;
+    margin: 0 auto;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-description {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    max-width: 600px;
+    top: 160px;
+    left: 330px;
+}
+
+h2 {
+    font-size: 36px;
+    line-height: 53px;
+    margin: 0;
+}
+
+.service-description p {
+    margin: 0;
+}
+
+.form-wrapper {
+    display: flex;
+    position: absolute;
+    top: 440px;
+    max-width: 700px;
+    flex-direction: column;
+    gap: 32px;
+    padding: 5px 24px 24px 24px;
+    border-radius: 12px;
+    box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.2), 0 2px 25px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
+    left: 330px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+.contact-form {
+    display: flex;
+    gap: 60px;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+label {
+    font-size: 13px;
+    color: grey;
+}
+
+input {
+    border: none;
+    font-size: 16px;
+    border-bottom: 1px solid rgb(223, 223, 223);
+    padding-bottom: 8px;
+}
+
+input::placeholder {
+    color: black;
+}
+
+.form-button {
+    border: none;
+    text-align: left;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    background-color: rgb(0, 113, 255);
+}
+
+.screen-container {
+    position: absolute;
+    top: -620px;
+    left: 1100px;
+    display: grid;
+    grid-template: 670px 670px 670px / 310px 310px;
+    gap: 15px;
+    transform: rotate(-12deg);
+}
+
+.screen-container img {
+    width: 310px;
+    height: 670px;
+    border-radius: 25px;
+}
+
+.screen-container img:nth-child(3) {
+    box-shadow: 0 0 96px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(16, 24, 40);
+    border-radius: 15px;
+    padding: 20px;
+    gap: 10px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    width: 80%;
+}
+
+.footer-heading {
+    font-size: 36px;
+    color: white;
+    font-weight: bold;
+}
+
+.footer-address {
+    display: flex;
+    width: 100%;
+    padding-left: 20px;
+}
+
+.address-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.address-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.address-title p {
+    color: #98A2B3;
+    font-size: 14px;
+    font-style: normal;
+}
+
+.address-block a {
+    font-weight: bold;
+    font-size: 17px;
+    color: white;
+    text-decoration: none;
+    font-style: normal;
+}
+
+.internationality {
+    display: flex;
+    gap: 12px;
+    padding-top: 24px;
+}
+
+.internationality svg {
+    margin-top: 15px;
+}
+
+.internationality p {
+    font-size: 14px;
+    color: white;
+}
+
+.internationality use {
+    fill: white;
+}
+
+header use {
+    fill: rgb(0, 113, 255);
+}
+
+.footer-address use {
+    fill: rgb(174, 174, 174);
 }
