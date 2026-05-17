@@ -27,6 +27,11 @@ function logRequest() {
 logRequest();
 
 $image_dir = 'src/assets/img/';
+$thumbnail_dir = 'src/assets/img/thumbnails/';
+
+if (!file_exists($thumbnail_dir)) {
+    mkdir($thumbnail_dir, 0777, true);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     $file = $_FILES['image'];
@@ -38,16 +43,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
         if (!in_array($file['type'], $allowed_types)) {
             $error_message = "Недопустимый тип файла. Разрешены только: JPEG, PNG, GIF.";
         } else {
-            $max_size = 5 * 1024 * 1024;
+            $max_size = 5 * 1024 * 1024; // 5 МБ
             if ($file['size'] > $max_size) {
                 $error_message = "Размер файла превышает допустимый (5 МБ).";
             } else {
                 $filename = uniqid() . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                 $filepath = $image_dir . $filename;
+                $thumbnail_path = $thumbnail_dir . $filename;
 
                 if (move_uploaded_file($file['tmp_name'], $filepath)) {
-                    header('Location: ' . $_SERVER['PHP_SELF']);
-                    exit;
+                    $source_image = null;
+                    $image_type = null;
+                    $extension = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
+
+                    if ($extension == 'jpg' || $extension == 'jpeg' || $file['type'] == 'image/jpeg') {
+                        $source_image = imagecreatefromjpeg($filepath);
+                        $image_type = 'jpeg';
+                    } elseif ($extension == 'png' || $file['type'] == 'image/png') {
+                        $source_image = imagecreatefrompng($filepath);
+                        $image_type = 'png';
+                    } elseif ($extension == 'gif' || $file['type'] == 'image/gif') {
+                        $source_image = imagecreatefromgif($filepath);
+                        $image_type = 'gif';
+                    }
+
+                    if ($source_image) {
+                        $width = imagesx($source_image);
+                        $height = imagesy($source_image);
+
+                        $thumbnail_width = 200;
+                        $thumbnail_height = floor($height * ($thumbnail_width / $width));
+
+                        $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+
+                        if ($image_type == 'png') {
+                            imagealphablending($thumbnail, false);
+                            imagesavealpha($thumbnail, true);
+                            $transparent = imagecolorallocatealpha($thumbnail, 255, 255, 255, 127);
+                            imagefilledrectangle($thumbnail, 0, 0, $thumbnail_width, $thumbnail_height, $transparent);
+                        }
+
+                        imagecopyresampled(
+                            $thumbnail, $source_image,
+                            0, 0, 0, 0,
+                            $thumbnail_width, $thumbnail_height,
+                            $width, $height
+                        );
+
+                        switch ($image_type) {
+                            case 'jpeg':
+                                imagejpeg($thumbnail, $thumbnail_path, 90);
+                                break;
+                            case 'png':
+                                imagepng($thumbnail, $thumbnail_path);
+                                break;
+                            case 'gif':
+                                imagegif($thumbnail, $thumbnail_path);
+                                break;
+                        }
+
+                        imagedestroy($source_image);
+                        imagedestroy($thumbnail);
+
+                        header('Location: ' . $_SERVER['PHP_SELF']);
+                        exit;
+                    } else {
+                        $error_message = "Не удалось обработать изображение.";
+                    }
                 } else {
                     $error_message = "Не удалось сохранить загруженный файл.";
                 }
@@ -56,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     }
 }
 
-function buildGallery($directory) {
+function buildGallery($directory, $thumbnail_directory) {
     $gallery_html = '<div class="gallery">';
 
     if (is_dir($directory)) {
@@ -64,7 +126,7 @@ function buildGallery($directory) {
 
         foreach ($files as $file) {
             $file_path = $directory . $file;
-            if ($file === '.' || $file === '..' || is_dir($file_path)) {
+            if ($file === '.' || $file === '..' || is_dir($file_path) || $file === 'thumbnails') {
                 continue;
             }
 
@@ -73,9 +135,14 @@ function buildGallery($directory) {
                 continue;
             }
 
+            $thumbnail_path = $thumbnail_directory . $file;
+            if (!file_exists($thumbnail_path)) {
+                $thumbnail_path = $file_path;
+            }
+
             $gallery_html .= '<div class="gallery-item">';
             $gallery_html .= '<a href="' . htmlspecialchars($file_path) . '" target="_blank">';
-            $gallery_html .= '<img src="' . htmlspecialchars($file_path) . '" alt="' . htmlspecialchars($file) . '" width="220">';
+            $gallery_html .= '<img src="' . htmlspecialchars($thumbnail_path) . '" alt="' . htmlspecialchars($file) . '">';
             $gallery_html .= '</a>';
             $gallery_html .= '</div>';
         }
@@ -84,6 +151,7 @@ function buildGallery($directory) {
     $gallery_html .= '</div>';
     return $gallery_html;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +160,7 @@ function buildGallery($directory) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Фотогалерея</title>
-    <link rel="stylesheet" href="src/assets/styles/style.css">
+    <link rel="stylesheet" href="/src/assets/styles/style.css">
 </head>
 <body>
     <h1>Фотогалерея</h1>
@@ -118,6 +186,6 @@ function buildGallery($directory) {
         </form>
     </div>
 
-    <?php echo buildGallery($image_dir); ?>
+    <?php echo buildGallery($image_dir, $thumbnail_dir); ?>
 </body>
 </html>
