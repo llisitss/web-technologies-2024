@@ -45,6 +45,16 @@ class Pizza {
         return this.size;
     }
 
+    setType(type) {
+        if (!Pizza.TYPES[type]) throw new Error('Неизвестный вид пиццы');
+        this.type = type;
+    }
+
+    setSize(size) {
+        if (!Pizza.SIZES[size]) throw new Error('Неизвестный размер пиццы');
+        this.size = size;
+    }
+
     calculatePrice() {
         let price = Pizza.TYPES[this.type].price + Pizza.SIZES[this.size].price;
         for (const topping of this.toppings) {
@@ -67,17 +77,43 @@ class Pizza {
     }
 }
 
-export { Pizza };
+const pizza = new Pizza('Маргарита', 'Маленькая');
 
-// Пример использования
+document.querySelectorAll('.pizza-item').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelectorAll('.pizza-item').forEach(p => p.classList.remove('selected'));
+        item.classList.add('selected');
+        pizza.setType(item.dataset.type);
+        updateButton();
+    });
+});
 
-const pizza = new Pizza('Баварская', 'Большая');
+document.querySelectorAll('input[name=size]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        pizza.setSize(radio.value);
+        document.querySelectorAll('.size-option').forEach(option => option.classList.remove('selected'));
+        radio.parentElement.classList.add('selected');
+        updateButton();
+    });
+});
 
-pizza.addTopping('Чедер и пармезан');
-pizza.addTopping('Сырный борт');
+document.querySelectorAll('.topping-item').forEach(item => {
+    item.addEventListener('click', () => {
+        item.classList.toggle('selected');
+        const topping = item.dataset.topping;
+        if (item.classList.contains('selected')) {
+            pizza.addTopping(topping);
+        } else {
+            pizza.removeTopping(topping);
+        }
+        updateButton();
+    });
+});
 
-console.log('Вид пиццы:', pizza.getType());
-console.log('Размер:', pizza.getSize());
-console.log('Добавки:', pizza.getToppings());
-console.log('Цена:', pizza.calculatePrice(), 'руб.');
-console.log('Калорийность:', pizza.calculateCalories(), 'Ккал');
+function updateButton() {
+    const totalPrice = pizza.calculatePrice();
+    const totalCalories = pizza.calculateCalories();
+
+    document.getElementById('total-price').innerText = totalPrice || '0';
+    document.getElementById('total-calories').innerText = totalCalories || '0';
+}

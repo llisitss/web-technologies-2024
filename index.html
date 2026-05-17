@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ пиццы</title>
+    <link rel="stylesheet" href="src/assets/styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Заказ Пиццы</h1>
 
+        <div class="menu">
+            <div class="pizza-selection">
+                <h2>Выберите пиццу:</h2>
+                <div class="pizza-images">
+                    <div class="pizza-item" data-type="Маргарита">
+                        <img src="src/assets/img/маргарита.avif" alt="Маргарита" class="pizza-image">
+                        <p>Маргарита</p>
+                    </div>
+                    <div class="pizza-item" data-type="Пепперони">
+                        <img src="src/assets/img/пепперони.avif" alt="Пепперони" class="pizza-image">
+                        <p>Пепперони</p>
+                    </div>
+                    <div class="pizza-item" data-type="Баварская">
+                        <img src="src/assets/img/баварская.avif" alt="Баварская" class="pizza-image">
+                        <p>Баварская</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-details">
+                <div id="sizeDiv">
+                    <h2>Выберите размер:</h2>
+                    <div class="size-selector">
+                        <label class="size-option">
+                            <input type="radio" name="size" value="Маленькая">
+                            <span>Маленькая</span>
+                        </label>
+                        <label class="size-option">
+                            <input type="radio" name="size" value="Большая">
+                            <span>Большая</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="toppingsDiv">
+                    <h2>Добавить по вкусу:</h2>
+                    <div class="topping-images">
+                        <div class="topping-item" data-topping="Сырный борт">
+                            <img src="src/assets/img/борт.png" alt="Сырный бортик">
+                            <p>Сырный <br>бортик</p>
+                        </div>
+                        <div class="topping-item" data-topping="Сливочная моцарелла">
+                            <img src="src/assets/img/моцарелла.png" alt="Сливочная моцарелла">
+                            <p>Сливочная <br>моцарелла</p>
+                        </div>
+                        <div class="topping-item" data-topping="Чедер и пармезан">
+                            <img src="src/assets/img/чеддер.png" alt="Чеддер и пармезан">
+                            <p>Чеддер и <br>пармезан</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="calculateBtn">Добавить в корзину за <br>
+                    <span id="total-price">0</span> рублей (<span id="total-calories">0</span> Ккалорий)
+                </button>
+            </div>
+        </div>
+
+        <p id="result"></p>
+    </div>
+
+    <script src="pizzeria.js"></script>
+</body>
+</html>
